@@ -24,7 +24,8 @@
     ".ini", 
     ".rst", 
     ".yml", 
-    ".txt"
+    ".txt", 
+    ".sh"
   ], 
   "project-type": "Import from sources", 
   "postExecScript": "", 

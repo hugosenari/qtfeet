@@ -7,6 +7,9 @@ python:
   - "2.7"
   - "pypy"
 
+before_install:
+  - ./bin/ci/before_install.sh
+
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -r requirements.txt
 
