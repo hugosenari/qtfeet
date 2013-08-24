@@ -52,7 +52,6 @@ def main():
     # Prepare the framework, with iPOPO and a shell
     framework = pelix.framework.create_framework(['pelix.ipopo.core',
                                                   'pelix.shell.core',
-                                                  'pelix.shell.console',
                                                   'pelix.shell.ipopo'])
     context = framework.get_bundle_context()
 
