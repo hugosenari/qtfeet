@@ -50,6 +50,7 @@ Why not? QT is now GPL, cross platform... This is my first QT attempt,
 then is something new to learn.
 
 **How looks (or will look) architecture?**
+
 To be honest I'm trying create something like Eclipse Framework that in the
 end can used to create aplications for other uses.
 
