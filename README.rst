@@ -21,9 +21,11 @@ Features
 --------
 
 **DONE**
+
 * Nothing
 
 **TODO**
+
 * Plugin System (all this app are plugin)
 * Show available buses in dbus connections
 * Show available interfaces in bus
