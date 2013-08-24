@@ -8,7 +8,7 @@ import sys
 try:
     from setuptools import setup
 except ImportError:
-    from distutils.core import setup
+    from distutils.core import setup  # lint:ok
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -20,7 +20,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 setup(
     name='qtfeet',
     version='0.1.0',
-    description='"QTFeet, DBus instrospection tool, DFeet clone writed with QT"',
+    description='QTFeet, DBus instrospection tool, DFeet clone writed with QT',
     long_description=readme + '\n\n' + history,
     author='hugosenari',
     author_email='hugosenari@gmail.com',
