@@ -31,6 +31,8 @@ setup(
     package_dir={'qtfeet': 'qtfeet'},
     include_package_data=True,
     install_requires=[
+        'iPOPO',
+        'PyQt4'
     ],
     license="BSD",
     zip_safe=False,

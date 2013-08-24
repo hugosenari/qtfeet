@@ -23,7 +23,8 @@
     ".js", 
     ".ini", 
     ".rst", 
-    ".yml"
+    ".yml", 
+    ".txt"
   ], 
   "project-type": "Import from sources", 
   "postExecScript": "", 
