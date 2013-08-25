@@ -10,7 +10,7 @@ Tests for `qtfeet` module.
 
 import unittest
 
-from qtfeet import qtfeet
+import qtfeet
 
 
 class TestQtfeet(unittest.TestCase):
