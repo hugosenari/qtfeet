@@ -10,4 +10,4 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+Thomas Calmant author of QT-iPOPO (http://ipopo.coderxpress.net/tutorials/qt.html)
