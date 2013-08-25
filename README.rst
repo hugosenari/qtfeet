@@ -53,8 +53,5 @@ then is something new to learn.
 
 **How looks (or will look) architecture?**
 
-To be honest I'm trying create something like Eclipse Framework that in the
-end can used to create aplications for other uses.
-
 * QT (for UI and some libs like DBus)
 * iPOPO (python implementation of OSGi or something close to this)

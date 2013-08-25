@@ -29,16 +29,9 @@ from pelix.ipopo.decorators import ComponentFactory, Requires, Provides, \
 
 # Standard library
 import os
-import logging
 
 # QTFeet library
 from qtfeet import utils
-
-# -----------------------------------------------------------------------------
-
-_logger = logging.getLogger(__name__)
-
-# -----------------------------------------------------------------------------
 
 
 class _QtMainFrame(QtWidgets.QMainWindow):
@@ -83,8 +76,10 @@ class _QtMainFrame(QtWidgets.QMainWindow):
 # ------------------------------------------------------------------------
 
 
-@ComponentFactory("MainFrameFactory")
-@Requires("_qt_loader", 'qt.ui')
+@ComponentFactory('MainFrameFactory')
+@Requires('_qt_loader', 'qt.ui')
+@Requires('_logger_svc', 'modules.logger.service')
+@Requires('_config_svc', 'modules.config.service', optional=True)
 @Requires('_widgets_svc', 'qt.widget', aggregate=True, optional=True,
           spec_filter="(placement=main)")
 @Provides('qt.frame.main')
@@ -113,6 +108,12 @@ class MainFrame(object):
 
         # Frameworks
         self._widgets_svc = None
+
+        # Logger service
+        self._logger_svc = None
+
+        # Config service
+        self._config_svc = None
 
         # Tabs
         self._widgets_tabs = {}
@@ -195,6 +196,9 @@ class MainFrame(object):
         if self.__validated:
             self._qt_loader.run_on_ui(self.__add_tab, service)
 
+        self._logger_svc.info and \
+        self._logger_svc.info(self, '_widgets_svc binded')
+
     @UnbindField('_widgets_svc')
     def unbind_widget(self, field, service, reference):
         """
@@ -202,6 +206,9 @@ class MainFrame(object):
         """
         if self.__validated:
             self._qt_loader.run_on_ui(self.__remove_tab, service)
+
+        self._logger_svc.info and \
+        self._logger_svc.info(self, '_widgets_svc unbinded')
 
     @Validate
     def validate(self, context):
@@ -221,6 +228,10 @@ class MainFrame(object):
         # Flag to allow un/bind probes to work
         self.__validated = True
 
+        # Log info
+        self._logger_svc.info and \
+        self._logger_svc.info(self, 'validated')
+
     @Invalidate
     def invalidate(self, context):
         """
@@ -228,6 +239,10 @@ class MainFrame(object):
 
         :param context: Bundle context
         """
+        # Log info
+        self._logger_svc and \
+        self._logger_svc.info(self, 'invalidated')
+
         # De-activate binding call backs
         self.__validated = False
 

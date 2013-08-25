@@ -28,19 +28,12 @@ import pelix.framework
 import logging
 import threading
 
-# QTFeet library
-from . import utils
-from .modules import __file__ as modules__file__
-
 
 def main():
     """
     Loads Qt and the framework.
     Blocks while Qt or the framework are running.
     """
-    # Add current dir to path, so pelix can seek for modules here
-    utils.Path.add_module_dir_to_path(__file__)
-    utils.Path.add_module_dir_to_path(modules__file__)
 
     # Import the Qt bridge as late as possible, to avoid unwanted module
     # loading
@@ -88,7 +81,10 @@ def run_framework(framework, on_stop):
         framework.start()
 
         # [...] Install bundles, instantiate components [...]
-        context.install_bundle('main_frame').start()
+        context.install_bundle('qtfeet.modules.cmd_cfg_provider').start()
+        context.install_bundle('qtfeet.modules.configuration').start()
+        context.install_bundle('qtfeet.modules.logger').start()
+        context.install_bundle('qtfeet.modules.main_frame').start()
 
         # Wait for the framework to stop
         framework.wait_for_stop()
