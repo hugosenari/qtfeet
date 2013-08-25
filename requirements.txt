@@ -1,2 +1,1 @@
 iPOPO
-PyQt4
