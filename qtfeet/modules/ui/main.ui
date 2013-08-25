@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Main Frame</string>
+   <string>QtFeet</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -54,7 +54,7 @@
   </action>
   <action name="action_about">
    <property name="text">
-    <string>&amp;About...</string>
+    <string>&amp;About QtFeet</string>
    </property>
   </action>
   <action name="action_about_qt">

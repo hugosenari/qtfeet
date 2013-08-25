@@ -15,12 +15,14 @@ class UI(object):
         Return the default ui path from some module
         module.__path__/ui
         """
-        path = None
+        result = None
         try:
-            path = module.__path__
+            result = module.__file__
         except AttributeError:
-            path = os.path.dirname(module.__file__)
-        return os.path.join(path, 'ui')
+            result = module
+        result = os.path.dirname(result)
+        result = os.path.join(result, 'ui')
+        return result
 
 
 class Path(object):
@@ -36,8 +38,7 @@ class Path(object):
         """
         path = None
         try:
-            path = os.path.join(module.__path__)
-        except AttributeError:
             path = os.path.dirname(module.__file__)
-        if path:
-            sys.path.append(path)
+        except AttributeError:
+            path = os.path.dirname(module)
+        sys.path.append(path)

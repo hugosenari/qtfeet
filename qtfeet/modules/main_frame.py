@@ -33,7 +33,6 @@ import logging
 
 # QTFeet library
 from qtfeet import utils
-from qtfeet import qfeet
 
 # -----------------------------------------------------------------------------
 
@@ -70,7 +69,10 @@ class _QtMainFrame(QtWidgets.QMainWindow):
         """
         About signal handler
         """
-        QtWidgets.QMessageBox.about(self, "About...", "Some text here")
+        QtWidgets.QMessageBox.about(self, "About QtFeet", """
+        <a href="https://github.com/hugosenari/qtfeet">QtFeet</a>
+        Is a DBus introspection tool, clone of DFeet.
+        """)
 
     def __about_qt(self):
         """
@@ -120,7 +122,7 @@ class MainFrame(object):
         Sets up the frame. Must be called from the UI thread
         """
         # Load the UI file
-        ui_path = os.path.join(utils.UI.get_ui_dir(qfeet), "main.ui")
+        ui_path = os.path.join(utils.UI.get_ui_dir(__file__), "main.ui")
         self._frame = _QtMainFrame(self, ui_path)
 
         # Show the frame
