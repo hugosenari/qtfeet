@@ -24,8 +24,8 @@ from pelix.ipopo.decorators import ComponentFactory, Provides, Property, \
     Instantiate
 import pelix.ipopo.constants as constants
 
-# PyQt4
-import PyQt4.QtGui as QtGui
+# PyQt5
+import PyQt5.QtWidgets as QtWidgets
 
 # -----------------------------------------------------------------------------
 
@@ -70,8 +70,8 @@ class DummyWidget(object):
             return self._widget
 
         # Make a QLabel
-        self._widget = QtGui.QLabel("Your are watching label {0}"
-                                    .format(self._name))
+        self._widget = QtWidgets.QLabel("Your are watching label {0}"
+            .format(self._name))
 
         return self._widget
 

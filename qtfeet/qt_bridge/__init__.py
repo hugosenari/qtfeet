@@ -19,9 +19,9 @@ __docformat__ = "restructuredtext en"
 
 # -----------------------------------------------------------------------------
 
-# PyQt 4
-import PyQt4.QtCore as QtCore
-import PyQt4.QtGui as QtGui
+# PyQt 5
+import PyQt5.QtCore as QtCore
+import PyQt5.QtWidgets as QtWidgets
 
 # Standard library
 import logging
@@ -118,7 +118,7 @@ class QtLoader(QtCore.QObject):
             self.__waiting_calls = queue.Queue()
 
             # Create the QApplication object
-            self.__app = QtGui.QApplication(argv or sys.argv)
+            self.__app = QtWidgets.QApplication(argv or sys.argv)
 
             # Connect the UI runner signal
             self.__ui_queued.connect(self.__ui_runner)

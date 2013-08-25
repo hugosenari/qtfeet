@@ -1,7 +1,7 @@
 yes | sudo add-apt-repository ppa:ubuntu-sdk-team/ppa
 sudo apt-get update -qq
-sudo apt-get install -qq cmake qt5-meta-full
-sudo apt-get install python-dev python3-dev  qt5-qmake qt5-default
+sudo apt-get upgrade -qq
+sudo apt-get install python-dev python3-dev  qt5-qmake qt5-default qtchooser 
 sudo ln -s /usr/include/python2.7 /usr/local/include/python2.7
 mkdir build_pyqt
 cd build_pyqt

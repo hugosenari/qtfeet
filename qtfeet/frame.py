@@ -19,9 +19,9 @@ __docformat__ = "restructuredtext en"
 
 # -----------------------------------------------------------------------------
 
-# PyQt4
-import PyQt4.QtGui as QtGui
-import PyQt4.uic as uic
+# PyQt5
+import PyQt5.uic as uic
+import PyQt5.QtWidgets as QtWidgets
 
 # iPOPO
 from pelix.ipopo.decorators import ComponentFactory, Requires, Provides, \
@@ -42,7 +42,7 @@ _logger = logging.getLogger(__name__)
 # -----------------------------------------------------------------------------
 
 
-class _QtMainFrame(QtGui.QMainWindow):
+class _QtMainFrame(QtWidgets.QMainWindow):
 
     """
     Represents the UI, loaded from a UI file
@@ -53,7 +53,7 @@ class _QtMainFrame(QtGui.QMainWindow):
         Sets up the frame
         """
         # Parent constructor
-        QtGui.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
 
         # Store the controller
         self.__controller = controller
@@ -70,13 +70,13 @@ class _QtMainFrame(QtGui.QMainWindow):
         """
         About signal handler
         """
-        QtGui.QMessageBox.about(self, "About...", "Some text here")
+        QtWidgets.QMessageBox.about(self, "About...", "Some text here")
 
     def __about_qt(self):
         """
         About Qt signal handler
         """
-        QtGui.QMessageBox.aboutQt(self)
+        QtWidgets.QMessageBox.aboutQt(self)
 
 # ------------------------------------------------------------------------
 
