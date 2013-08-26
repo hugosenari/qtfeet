@@ -36,14 +36,22 @@
     </property>
     <addaction name="action_quit"/>
    </widget>
+   <widget class="QMenu" name="menu_tools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="action_settings"/>
+    <addaction name="action_add_ons"/>
+   </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
-     <string>&amp;?</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="action_about"/>
     <addaction name="action_about_qt"/>
    </widget>
    <addaction name="menu_file"/>
+   <addaction name="menu_tools"/>
    <addaction name="menu_help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -60,6 +68,16 @@
   <action name="action_about_qt">
    <property name="text">
     <string>About &amp;Qt</string>
+   </property>
+  </action>
+  <action name="action_settings">
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+  </action>
+  <action name="action_add_ons">
+   <property name="text">
+    <string>Add-ons</string>
    </property>
   </action>
  </widget>

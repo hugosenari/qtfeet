@@ -23,6 +23,9 @@ import pelix.ipopo.constants as constants
 import json
 import argparse
 
+# QtFeet Utils
+from ..utils import StdCfgType
+
 # -----------------------------------------------------------------------------
 
 
@@ -62,12 +65,23 @@ class CmdConfigProvider(object):
         """
         return self._name
 
-    def get_config(self, name, default=None):
+    def get_type(self):
+        """
+        Return cfg type for sort
+        """
+        return StdCfgType.ARGS
+
+    def writable(self):
+        """
+        Defines if this kind of config can save config
+        """
+        return False
+
+    def get_config(self, name):
         """
         Return a value of config
         """
-        default = self._opts.get(name, default)
-        return default
+        return self._opts.get(name, None)
 
     def set_config(self, name, value):
         """

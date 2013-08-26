@@ -197,7 +197,7 @@ class MainFrame(object):
             self._qt_loader.run_on_ui(self.__add_tab, service)
 
         self._logger_svc.info and \
-        self._logger_svc.info(self, '_widgets_svc binded')
+            self._logger_svc.info(self, '_widgets_svc binded')
 
     @UnbindField('_widgets_svc')
     def unbind_widget(self, field, service, reference):
@@ -208,7 +208,7 @@ class MainFrame(object):
             self._qt_loader.run_on_ui(self.__remove_tab, service)
 
         self._logger_svc.info and \
-        self._logger_svc.info(self, '_widgets_svc unbinded')
+            self._logger_svc.info(self, '_widgets_svc unbinded')
 
     @Validate
     def validate(self, context):
@@ -230,7 +230,7 @@ class MainFrame(object):
 
         # Log info
         self._logger_svc.info and \
-        self._logger_svc.info(self, 'validated')
+            self._logger_svc.info(self, 'validated')
 
     @Invalidate
     def invalidate(self, context):
@@ -239,9 +239,6 @@ class MainFrame(object):
 
         :param context: Bundle context
         """
-        # Log info
-        self._logger_svc and \
-        self._logger_svc.info(self, 'invalidated')
 
         # De-activate binding call backs
         self.__validated = False
@@ -255,3 +252,7 @@ class MainFrame(object):
         self._qt_loader.run_on_ui(self.__clear_ui)
 
         self._context = None
+
+        # Log info
+        self._logger_svc and \
+            self._logger_svc.info(self, 'invalidated')

@@ -42,3 +42,17 @@ class Path(object):
         except AttributeError:
             path = os.path.dirname(module)
         sys.path.append(path)
+
+
+class StdCfgType(object):
+
+    """
+    Utility class to define default config priority
+    0 - cmd 'args' / file suplied by cmd
+    1 - current dir config file
+    2 - user config (can be a file or a server)
+    3 - system config (can be a file or a server)
+    4 - Default value
+    """
+
+    (ARGS, PWD, HOME, SYS, DEFAULT) = range(0, 5)
