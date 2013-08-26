@@ -86,9 +86,7 @@ class ConfigService(object):
         """
         Return a value of config
         """
-        return self \
-            .get_config_values(name, default) \
-            .next()[1]
+        return self.get_config_values(name, default).next()[1]
 
     def set_config(self, name, value, cfg_type=None):
         """

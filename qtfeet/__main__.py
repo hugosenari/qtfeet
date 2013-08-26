@@ -82,6 +82,8 @@ def run_framework(framework, on_stop):
 
         # [...] Install bundles, instantiate components [...]
         context.install_bundle('qtfeet.modules.cmd_cfg_provider').start()
+        context.install_bundle('qtfeet.modules.pwd_cfg_provider').start()
+        context.install_bundle('qtfeet.modules.home_cfg_provider').start()
         context.install_bundle('qtfeet.modules.configuration').start()
         context.install_bundle('qtfeet.modules.logger').start()
         context.install_bundle('qtfeet.modules.main_frame').start()
