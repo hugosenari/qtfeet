@@ -87,6 +87,8 @@ def run_framework(framework, on_stop):
         context.install_bundle('qtfeet.modules.configuration').start()
         context.install_bundle('qtfeet.modules.logger').start()
         context.install_bundle('qtfeet.modules.main_frame').start()
+        # Start configured add-ons
+        context.install_bundle('qtfeet.modules.add_ons').start()
 
         # Wait for the framework to stop
         framework.wait_for_stop()

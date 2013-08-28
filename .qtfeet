@@ -1,3 +1,10 @@
 {
-  "loglevel": "WARNING"
+ "loglevel": "WARNING", 
+ "addons": [
+  {
+   "active": true, 
+   "name": "Widget example", 
+   "bundle": "qtfeet.modules.addon_example.hello_world"
+  }
+ ]
 }

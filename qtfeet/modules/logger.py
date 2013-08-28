@@ -54,7 +54,7 @@ class LoggerService(object):
         """
         level = self._config_svc.get_config(
             'loglevel', 'WARNING')
-        self.level = self.parse_level(level)
+        self.level = self.parse_level(level) or self.level
         logging.basicConfig(level=self.level)
 
     def get_name(self):
@@ -70,9 +70,12 @@ class LoggerService(object):
         sender: instance of object that send this log
         message: log message
         """
-        logger = logging.getLogger(str(sender))
-        logger.setLevel(self.level)
-        logger.log(level, message)
+        try:
+            logger = logging.getLogger(str(sender))
+            logger.setLevel(self.level)
+            logger.log(level, message)
+        except Exception as e:
+            logger.error(e)
 
     def debug(self, sender, message):
         """

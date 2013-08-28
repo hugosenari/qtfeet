@@ -78,7 +78,7 @@ class ConfigService(object):
         if self._configs_svc:
             for cfg_provider in self._configs_svc:
                 cfg_value = cfg_provider.get_config(name)
-                if cfg_value:
+                if not cfg_value is None:
                     yield cfg_provider.get_type(), cfg_value
         yield StdCfgType.DEFAULT, default
 
@@ -87,24 +87,6 @@ class ConfigService(object):
         Return a value of config
         """
         return self.get_config_values(name, default).next()[1]
-
-    def set_config(self, name, value, cfg_type=None):
-        """
-        Sets a value of config
-        """
-        if self._configs_svc:
-            for cfg_provider in self._configs_svc:
-                if cfg_provider.writable() and (
-                    cfg_type is None or
-                    cfg_provider.get_get_type() == cfg_type
-                ):
-                    try:
-                        cfg_provider.set_config(name, value)
-                        return None
-                    except:
-                        pass
-                        # something goes wrong :(
-                        # try next config provider
 
     def sort_cfg_svc(self):
         self._configs_svc = sorted(
