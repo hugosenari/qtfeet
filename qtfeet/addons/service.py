@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -- Content-Encoding: UTF-8 --
 """
-Defines a Logging component
+Defines a Add On Service component
 
 """
 
@@ -23,9 +23,9 @@ import pelix.ipopo.constants as constants
 
 
 @ComponentFactory('add-ons-service-factory')
-@Requires('_config_svc', 'modules.config.service')
-@Requires('_logger_svc', 'modules.logger.service', optional=True)
-@Provides('modules.add_ons.service')
+@Requires('_config_svc', 'qtfeet.config.service')
+@Requires('_logger_svc', 'qtfeet.log.service', optional=True)
+@Provides('qtfeet.addons.service')
 @Property('_name', constants.IPOPO_INSTANCE_NAME)
 @Instantiate('add_ons-service0')
 class AddonsService(object):
@@ -50,34 +50,36 @@ class AddonsService(object):
         self._bundles = {}
 
     @Validate
-    def validate(self, context):
+    def _validate(self, context):
         """
         Component validated
 
         :param context: Bundle context
         """
         self._context = context
-        for addon in self.get_addons():
+        for addon in self.addons:
             if addon['active']:
                 self.start_addon(addon)
         # Log info
         self._logger_svc and \
             self._logger_svc.info(self, 'validated')
 
-    def get_name(self):
+    @property
+    def name(self):
         """
         Returns the instance name
         """
         return self._name
 
-    def get_addons(self):
+    @property
+    def addons(self):
         """
         Returns a list with current addons
         """
         #read addons from config
-        cfg_addons_from = self._config_svc.get_config_values('addons', [])
-        for cfg_origin, cfg_value in cfg_addons_from:
-            for addon in cfg_value:
+        addons_from = self._config_svc.values('addons', [])
+        for cfg_type, addons in addons_from:
+            for addon in addons:
                 path = addon['bundle']
                 if path not in self._addons:
                     self._addons[path] = self._addons
@@ -106,11 +108,17 @@ class AddonsService(object):
     def install(self, addon):
         """
         Install an addon
+
+        :param addon: addon information see .qtfeet for example
         """
-        pass
+        self._config_svc.set(addon)
 
     def uninstall(self, addon):
         """
         Uninstall an addon
         """
-        pass
+        addons_from = self._config_svc.values('addons', [])
+        for cfg_type, addons in addons_from:
+            if addon in addons:
+                addons.remove(addon)
+                self._config_svc.set(addons)

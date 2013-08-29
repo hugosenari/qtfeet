@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -- Content-Encoding: UTF-8 --
 """
-Defines a Configuration component
+Defines a Configuration Service component
 
+Join all configuration to expose to others
 """
 
 # Module version
@@ -26,9 +27,9 @@ from ..utils import StdCfgType
 
 
 @ComponentFactory('config-service-factory')
-@Requires('_configs_svc', 'modules.config.provider',
+@Requires('_configs_svc', 'qtfeet.config.provider',
           aggregate=True)
-@Provides('modules.config.service')
+@Provides('qtfeet.config.service')
 @Property('_name', constants.IPOPO_INSTANCE_NAME)
 @Instantiate('config-service0')
 class ConfigService(object):
@@ -39,7 +40,7 @@ class ConfigService(object):
     0 - cmd 'args' / file suplied by cmd
     1 - current dir config file
     2 - user config (can be a file or a server)
-    3 - system config (can be a file or a server)
+    3 - system config (can be a file or a server)  # TODO
     -1 - Default value (will be the last)
     """
 
@@ -53,13 +54,14 @@ class ConfigService(object):
         # Config
         self._configs_svc = None
 
-    def get_name(self):
+    @property
+    def name(self):
         """
         Returns the instance name
         """
         return self._name
 
-    def get_config_values(self, name, default=None):
+    def values(self, name, default=None):
         """
         Return all configs values for name
         This sistem can have various config provides ie:
@@ -76,36 +78,64 @@ class ConfigService(object):
         :return: yield with all configs for this name
         """
         if self._configs_svc:
-            for cfg_provider in self._configs_svc:
-                cfg_value = cfg_provider.get_config(name)
-                if not cfg_value is None:
-                    yield cfg_provider.get_type(), cfg_value
+            for provider in self._configs_svc:
+                value = provider.get(name)
+                if not value is None:
+                    yield provider.type, value
         yield StdCfgType.DEFAULT, default
 
-    def get_config(self, name, default=None):
+    def get(self, name, default=None):
         """
         Return a value of config
         """
-        return self.get_config_values(name, default).next()[1]
+        configs = self.values(name, default)
+        cfg_type, value = configs.next()
+        return value
 
-    def sort_cfg_svc(self):
+    def set(self, name, value=None, where=StdCfgType.DEFAULT):
+        """
+        Save configuration
+
+        :param name: of config
+        :param value: to set
+        :param where: to try set this value (default is first possible)
+        """
+        if self._configs_svc:
+            for service in self._configs_svc:
+                if where is service.type or where is -1:
+                    if service.writable:
+                        service.set(name, value)
+                        break
+
+    def _sort(self):
+        """
+        Sort my services
+        """
         self._configs_svc = sorted(
             self._configs_svc,
-            key=lambda cfg_svc: cfg_svc.get_type()
+            key=lambda cfg_svc: cfg_svc.type
         )
 
     @BindField('_configs_svc')
-    def bind_widget(self, field, service, reference):
+    def _bind_service(self, field, service, reference):
         """
         Config service bound
+
+        :param field: field name '_configs_svc' in this case
+        :param service: field value (bundle providing modules.config.provider)
+        :param reference: iPOPO.ServiceReference
         """
         # we need sort services
-        self.sort_cfg_svc()
+        self._sort()
 
     @UnbindField('_configs_svc')
-    def unbind_widget(self, field, service, reference):
+    def _unbind_service(self, field, service, reference):
         """
         Config service gone
+
+        :param field: field name '_configs_svc' in this case
+        :param service: field value (bundle providing modules.config.provider)
+        :param reference: iPOPO.ServiceReference
         """
         # we need sort services
-        self.sort_cfg_svc()
+        self._sort()

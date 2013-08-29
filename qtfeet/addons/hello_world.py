@@ -53,18 +53,18 @@ from pelix.ipopo.decorators import ComponentFactory, Requires, Provides, \
 # All othes (Required, Property and Provides) are optional
 @ComponentFactory(__addon_name__ + 'Factory')  # define the name of factory
 @Requires('_logger_svc',
-          'modules.logger.service')  # define dependency
+          'qtfeet.log.service')  # define dependency
 @Requires('_config_svc',
-          'modules.config.service',  # define option dependency
+          'qtfeet.config.service',  # define option dependency
           optional=True)
-@Requires('_widgets_svc', 'qt.widget',  # same as other but:
+@Requires('_widgets_svc', 'qtfeet.ui.widget',  # same as other but:
           aggregate=True,  # this will be an list with 0 or more services
           optional=True,  # this is option, set false to require at least 1
           spec_filter="(placement=main)")  # filter services that has property
-@Property('_name', 'name', 'HelloWorld')  # example of property
-@Provides('addon.' + __addon_name__)  # name to use as Requires in other addon
+@Property('name', 'name', 'HelloWorld')  # example of property
+@Provides('qtfeet.addon.' + __addon_name__)  # name to with Requires in other
 @Instantiate(__addon_name__ + '_instance')  # autostart this
-class HelloWorld(object):
+class HelloWorldAddon(object):
 
     """
     The hello world component
@@ -77,6 +77,8 @@ class HelloWorld(object):
         """
         Sets up the component
         """
+        self.name = None
+
         # system will set this values to us
         # because of @Requires("_logger_svc" ...
         self._logger_svc = None
@@ -87,9 +89,10 @@ class HelloWorld(object):
 
     # callback called when self._config_svc is defined
     @BindField('_logger_svc')
-    def bindLogger(self, field, service, reference):
+    def _bindLogger(self, field, service, reference):
         """
         Logger service bound
+
         :param field: field name '_logger_svc' in this case
         :param service: field value LoggerService in this case
         :param reference: iPOPO.ServiceReference
@@ -99,18 +102,24 @@ class HelloWorld(object):
 
     # callback called when self._logger_svc is undefined
     @UnbindField('_logger_svc')
-    def unbindLogger(self, field, service, reference):
+    def _unbindLogger(self, field, service, reference):
         """
         Logger service unbind
+
+        :param field: field name '_logger_svc' in this case
+        :param service: field value LoggerService in this case
+        :param reference: iPOPO.ServiceReference
         """
         # No service at self._logger_svc
         self._logger_svc
 
     # called when all required (not optional) services bind is done
     @Validate
-    def validate(self, context):
+    def _validate(self, context):
         """
         Component validated
+
+        :param context: iPOPO context
         """
         # now you can use required services
         self._logger_svc.info(self, 'Im valid')
@@ -118,9 +127,11 @@ class HelloWorld(object):
     # called when some required (not optional) service umbind
     # also called before system stop this addon
     @Invalidate
-    def invalidate(self, context):
+    def _invalidate(self, context):
         """
         Component invalidated
+
+        :param context: iPOPO context
         """
         if self._logger_svc:
             self._logger_svc.info(self, 'Im invalid')

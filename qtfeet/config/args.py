@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -- Content-Encoding: UTF-8 --
 """
-Defines a Cmd Configuration component
+Defines a Args Configuration component
+
+Options that are passed to command line (args)
 
 """
 
@@ -29,11 +31,11 @@ from ..utils import StdCfgType
 # -----------------------------------------------------------------------------
 
 
-@ComponentFactory('cmd-config-provider-factory')
-@Provides('modules.config.provider')
+@ComponentFactory('args-provider-factory')
+@Provides('qtfeet.config.provider')
 @Property('_name', constants.IPOPO_INSTANCE_NAME)
-@Instantiate('cmd-config-provider0')
-class CmdConfigProvider(object):
+@Instantiate('args-provider0')
+class ArgsProvider(object):
 
     """
     The module to provide config information from command line
@@ -59,33 +61,41 @@ class CmdConfigProvider(object):
         except Exception:
             self._opts = {}
 
-    def get_name(self):
+    @property
+    def name(self):
         """
         Returns the instance name
         """
         return self._name
 
-    def get_type(self):
+    @property
+    def type(self):
         """
         Return cfg type for sort
         """
         return StdCfgType.ARGS
 
+    @property
     def writable(self):
         """
         Defines if this kind of config can save config
         """
         return False
 
-    def get_config(self, name):
+    def get(self, name):
         """
         Return a value of config
+
+        :param name: of config
         """
         return self._opts.get(name, None)
 
-    def set_config(self, name, value):
+    def set(self, name, value):
         """
         Sets a value of config
         CMD has no set method
+
+        :param name: of config
+        :param value: to config
         """
-        pass
+        raise NotImplementedError()

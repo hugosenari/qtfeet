@@ -19,10 +19,6 @@ __docformat__ = "restructuredtext en"
 
 # -----------------------------------------------------------------------------
 
-# PyQt5
-import PyQt5.uic as uic
-import PyQt5.QtWidgets as QtWidgets
-
 # iPOPO
 from pelix.ipopo.decorators import ComponentFactory, Requires, Provides, \
     Validate, Invalidate, BindField, UnbindField, Instantiate
@@ -31,58 +27,19 @@ from pelix.ipopo.decorators import ComponentFactory, Requires, Provides, \
 import os
 
 # QTFeet library
-from qtfeet import utils
-
-
-class _QtMainFrame(QtWidgets.QMainWindow):
-
-    """
-    Represents the UI, loaded from a UI file
-    """
-
-    def __init__(self, controller, ui_file):
-        """
-        Sets up the frame
-        """
-        # Parent constructor
-        QtWidgets.QMainWindow.__init__(self)
-
-        # Store the controller
-        self.__controller = controller
-
-        # Load the frame UI
-        uic.loadUi(ui_file, self)
-
-        # Connect to signals
-        self.action_quit.triggered.connect(controller.quit)
-        self.action_about.triggered.connect(self.__about)
-        self.action_about_qt.triggered.connect(self.__about_qt)
-
-    def __about(self):
-        """
-        About signal handler
-        """
-        QtWidgets.QMessageBox.about(self, "About QtFeet", """
-        <a href="https://github.com/hugosenari/qtfeet">QtFeet</a>
-        Is a DBus introspection tool, clone of DFeet.
-        """)
-
-    def __about_qt(self):
-        """
-        About Qt signal handler
-        """
-        QtWidgets.QMessageBox.aboutQt(self)
+from .. import utils
+from ._qt_main_frame import _QtMainFrame
 
 # ------------------------------------------------------------------------
 
 
 @ComponentFactory('MainFrameFactory')
-@Requires('_qt_loader', 'qt.ui')
-@Requires('_logger_svc', 'modules.logger.service')
-@Requires('_config_svc', 'modules.config.service', optional=True)
-@Requires('_widgets_svc', 'qt.widget', aggregate=True, optional=True,
+@Requires('_qt_loader', 'qtfeet.ui.loader')
+@Requires('_logger_svc', 'qtfeet.log.service')
+@Requires('_config_svc', 'qtfeet.config.service', optional=True)
+@Requires('_widgets_svc', 'qtfeet.ui.widget', aggregate=True, optional=True,
           spec_filter="(placement=main)")
-@Provides('qt.frame.main')
+@Provides('qtfeet.ui.mainframe')
 @Instantiate("MainFrame")
 class MainFrame(object):
 
@@ -137,7 +94,8 @@ class MainFrame(object):
         self._frame.hide()
         self._frame = None
 
-    def get_frame(self):
+    @property
+    def frame(self):
         """
         Retrieves the main frame object
         """
@@ -189,7 +147,7 @@ class MainFrame(object):
         widget_qt.clean(self._frame)
 
     @BindField('_widgets_svc')
-    def bind_widget(self, field, service, reference):
+    def _bind_widget(self, field, service, reference):
         """
         Widget service bound
         """
@@ -200,7 +158,7 @@ class MainFrame(object):
             self._logger_svc.info(self, '_widgets_svc binded')
 
     @UnbindField('_widgets_svc')
-    def unbind_widget(self, field, service, reference):
+    def _unbind_widget(self, field, service, reference):
         """
         Widget service gone
         """
@@ -211,7 +169,7 @@ class MainFrame(object):
             self._logger_svc.info(self, '_widgets_svc unbinded')
 
     @Validate
-    def validate(self, context):
+    def _validate(self, context):
         """
         Component validated
 
@@ -233,7 +191,7 @@ class MainFrame(object):
             self._logger_svc.info(self, 'validated')
 
     @Invalidate
-    def invalidate(self, context):
+    def _invalidate(self, context):
         """
         Component invalidated
 

@@ -37,7 +37,7 @@ def main():
 
     # Import the Qt bridge as late as possible, to avoid unwanted module
     # loading
-    from . import qt_bridge
+    from .ui import qt_bridge
 
     # Load Qt
     qt_loader = qt_bridge.QtLoader()
@@ -50,7 +50,7 @@ def main():
     context = framework.get_bundle_context()
 
     # Register the Qt bridge as a service
-    context.register_service("qt.ui", qt_loader, {})
+    context.register_service("qtfeet.ui.loader", qt_loader, {})
 
     # Run the framework in a new thread
     thread = threading.Thread(target=run_framework, args=(framework,
@@ -81,14 +81,18 @@ def run_framework(framework, on_stop):
         framework.start()
 
         # [...] Install bundles, instantiate components [...]
-        context.install_bundle('qtfeet.modules.cmd_cfg_provider').start()
-        context.install_bundle('qtfeet.modules.pwd_cfg_provider').start()
-        context.install_bundle('qtfeet.modules.home_cfg_provider').start()
-        context.install_bundle('qtfeet.modules.configuration').start()
-        context.install_bundle('qtfeet.modules.logger').start()
-        context.install_bundle('qtfeet.modules.main_frame').start()
+        # Start config services
+        context.install_bundle('qtfeet.config.args').start()
+        context.install_bundle('qtfeet.config.pwd_dot_qtfeet').start()
+        context.install_bundle('qtfeet.config.home_dot_qtfeet').start()
+        context.install_bundle('qtfeet.config.service').start()
+        # Start logging services
+        context.install_bundle('qtfeet.log.loggin').start()
+        context.install_bundle('qtfeet.log.service').start()
+        # Start UI service
+        context.install_bundle('qtfeet.ui.main_frame').start()
         # Start configured add-ons
-        context.install_bundle('qtfeet.modules.add_ons').start()
+        context.install_bundle('qtfeet.addons.service').start()
 
         # Wait for the framework to stop
         framework.wait_for_stop()

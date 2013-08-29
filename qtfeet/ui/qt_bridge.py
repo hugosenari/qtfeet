@@ -25,13 +25,13 @@ import PyQt5.QtWidgets as QtWidgets
 
 # Standard library
 import logging
-import sys
 import threading
+import sys
 
-if sys.version_info[0] < 3:
-    import Queue as queue   # lint:ok
-else:
-    import queue   # lint:ok
+try:
+    import Queue as queue
+except:
+    import queue
 
 # -----------------------------------------------------------------------------
 

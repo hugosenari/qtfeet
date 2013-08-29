@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -- Content-Encoding: UTF-8 --
 """
-Defines a Home Configuration component
+Defines a Cmd Configuration component
 
+Configs that comes from .qtfeet file located at working dir
 """
 
 # Module version
@@ -29,11 +30,11 @@ from ..utils import StdCfgType
 # -----------------------------------------------------------------------------
 
 
-@ComponentFactory('home-config-provider-factory')
-@Provides('modules.config.provider')
+@ComponentFactory('pwd-dot-qtfeet-provider-factory')
+@Provides('qtfeet.config.provider')
 @Property('_name', constants.IPOPO_INSTANCE_NAME)
-@Instantiate('home-config-provider0')
-class PwdConfigProvider(object):
+@Instantiate('pwd-dot-qtfeet-provider0')
+class PwdDotQtFeetProvider(object):
 
     """
     The module to provide config information from current dir file .qtfeet
@@ -51,44 +52,47 @@ class PwdConfigProvider(object):
         self._opts = {}
         self._writable = False
 
-    def get_name(self):
+    @property
+    def name(self):
         """
         Returns the instance name
         """
         return self._name
 
-    def get_type(self):
+    @property
+    def type(self):
         """
         Return cfg type for sort
         """
-        return StdCfgType.HOME
+        return StdCfgType.PWD
 
+    @property
     def writable(self):
         """
         Defines if this kind of config can save config
         """
         return self._writable
 
-    def get_config(self, name):
+    def get(self, name):
         """
         Return a value of config
         """
         return self._opts.get(name, None)
 
-    def set_config(self, name, value):
+    def set(self, name, value):
         """
         Sets a value of config
         """
         self._opts[name] = value
 
     @Validate
-    def validate(self, context):
+    def _validate(self, context):
         """
         Component validated
         """
         # we need open file and read configs
         config_file = os.path.join(
-            os.path.expanduser('~'), '.qtfeet')
+            os.path.curdir, '.qtfeet')
         exist = os.path.exists(config_file) \
             and os.path.isfile(config_file)
         if exist:
@@ -99,14 +103,14 @@ class PwdConfigProvider(object):
                 self._writable = os.access(config_file, os.W_OK)
 
     @Invalidate
-    def invalidate(self, context):
+    def _invalidate(self, context):
         """
         Component invalidated
         """
         if self._writable:
             with open(self._file, "w") as cfg_file:
                 cfg_file.write(
-                    json.dumps(self._opts))
+                    json.dumps(self._opts, indent=1))
         self._file = None
         self._opts = {}
         self._writable = False

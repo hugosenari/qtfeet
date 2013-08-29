@@ -3,7 +3,9 @@
 """
 Defines a Logging component
 
+Use python logging to log information
 """
+
 
 # Module version
 __version_info__ = (0, 1, 0)
@@ -25,15 +27,15 @@ import logging
 # -----------------------------------------------------------------------------
 
 
-@ComponentFactory('logging-service-factory')
-@Requires('_config_svc', 'modules.config.service')
-@Provides('modules.logger.service')
+@ComponentFactory('logging-provider-factory')
+@Requires('_config_svc', 'qtfeet.config.service')
+@Provides('qtfeet.log.provider')
 @Property('_name', constants.IPOPO_INSTANCE_NAME)
-@Instantiate('logger-service0')
-class LoggerService(object):
+@Instantiate('logging-provider0')
+class LoggingProvider(object):
 
     """
-    The module to logger
+    The module to logging provider
     """
 
     def __init__(self):
@@ -52,18 +54,29 @@ class LoggerService(object):
         """
         Config service bound
         """
-        level = self._config_svc.get_config(
+        level = self._config_svc.get(
             'loglevel', 'WARNING')
-        self.level = self.parse_level(level) or self.level
+        self.level = self._parse_level(level) or self.level
         logging.basicConfig(level=self.level)
 
-    def get_name(self):
+    def _parse_level(level, default=logging.WARNING):
+        """
+        Convert string into loglevel
+
+        :param level: string name
+        :param default: level if unknow
+        """
+        level = str(level).upper()
+        return getattr(logging, level, default)
+
+    @property
+    def name(self):
         """
         Returns the instance name
         """
         return self._name
 
-    def log(self, level, sender, message):
+    def _log(self, level, sender, message):
         """
         Logs a message
         level: message priority
@@ -84,7 +97,7 @@ class LoggerService(object):
         sender: instance of object that send this log
         message: log message
         """
-        self.log(logging.DEBUG, sender, message)
+        self._log(logging.DEBUG, sender, message)
 
     def error(self, sender, message):
         """
@@ -92,7 +105,7 @@ class LoggerService(object):
         sender: instance of object that send this log
         message: log message
         """
-        self.log(logging.ERROR, sender, message)
+        self._log(logging.ERROR, sender, message)
 
     def info(self, sender, message):
         """
@@ -100,7 +113,7 @@ class LoggerService(object):
         sender: instance of object that send this log
         message: log message
         """
-        self.log(logging.INFO, sender, message)
+        self._log(logging.INFO, sender, message)
 
     def warning(self, sender, message):
         """
@@ -108,8 +121,4 @@ class LoggerService(object):
         sender: instance of object that send this log
         message: log message
         """
-        self.log(logging.WARNING, sender, message)
-
-    def parse_level(level, default=logging.WARNING):
-        level = str(level).upper()
-        return getattr(logging, level, default)
+        self._log(logging.WARNING, sender, message)
