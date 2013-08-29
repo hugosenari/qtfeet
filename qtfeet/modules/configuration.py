@@ -40,7 +40,7 @@ class ConfigService(object):
     1 - current dir config file
     2 - user config (can be a file or a server)
     3 - system config (can be a file or a server)
-    4 - Default value
+    -1 - Default value (will be the last)
     """
 
     def __init__(self):

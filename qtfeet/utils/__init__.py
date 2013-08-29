@@ -52,7 +52,7 @@ class StdCfgType(object):
     1 - current dir config file
     2 - user config (can be a file or a server)
     3 - system config (can be a file or a server)
-    4 - Default value
+    -1 - Default value (will be the last)
     """
 
-    (ARGS, PWD, HOME, SYS, DEFAULT) = range(0, 5)
+    (DEFAULT, ARGS, PWD, HOME, SYS) = range(-1, 4)

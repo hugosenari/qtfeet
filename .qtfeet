@@ -1,10 +1,14 @@
 {
- "loglevel": "WARNING", 
- "addons": [
-  {
-   "active": true, 
-   "name": "Widget example", 
-   "bundle": "qtfeet.modules.addon_example.hello_world"
-  }
- ]
+    "loglevel": "WARNING", 
+    "addons": [
+        {
+            "bundle": "qtfeet.modules.addon_example.hello_world",
+            "active": true,
+            "name": "Widget example",
+            "author": "hugosenari",
+            "site": "https://github.com/hugosenari/qtfeet/",
+            "email": "hugosenari@gmail.com",
+            "desc": "Dumb addon to show how create addons"
+        }
+    ]
 }
