@@ -26,82 +26,73 @@ import pelix.framework
 
 # Standard library
 import logging
-import threading
+
+# QtFeet library
+
+from .utils import threaded
+from .ui import qt_bridge
+
+# ------------------------------------------------------------------------
+
+
+def first(framework, qtloader):
+    """
+    Start QT loop
+    """
+    # Run the Qt loop (blocking)
+    qtloader.loop()
+
+# ------------------------------------------------------------------------
+
+
+def second(framework, qtloader):
+    """
+    Start pelix loop (in other thread)
+    """
+    context = framework.get_bundle_context()
+    framework.start()
+    # [...] Install bundles, instantiate components [...]
+    context.install_bundle('qtfeet.main').start()
+    # Wait for the framework to stop
+    framework.wait_for_stop()
+
+# ------------------------------------------------------------------------
+
+
+def stop(framework, qtloader):
+    """
+    stop everything
+    """
+    #try stop qtloader
+    try:
+        qtloader and qtloader.on_stop()
+    except:
+        pass
+
+    #try stop framework
+    try:
+        framework and framework.stop()
+    except:
+        pass
+
+# ------------------------------------------------------------------------
 
 
 def main():
-    """
-    Loads Qt and the framework.
-    Blocks while Qt or the framework are running.
-    """
-
-    # Import the Qt bridge as late as possible, to avoid unwanted module
-    # loading
-    from .ui import qt_bridge
-
-    # Load Qt
-    qt_loader = qt_bridge.QtLoader()
-    qt_loader.setup()
-
-    # Prepare the framework, with iPOPO and a shell
-    framework = pelix.framework.create_framework(['pelix.ipopo.core',
-                                                  'pelix.shell.core',
-                                                  'pelix.shell.ipopo'])
+    # Loads Qt and the framework.
+    framework = pelix.framework.create_framework(
+        ['pelix.ipopo.core', 'pelix.shell.core', 'pelix.shell.ipopo'])
     context = framework.get_bundle_context()
 
-    # Register the Qt bridge as a service
-    context.register_service("qtfeet.ui.loader", qt_loader, {})
+    # Load Qt
+    qtloader = qt_bridge.QtLoader()
+    qtloader.setup()
 
-    # Run the framework in a new thread
-    thread = threading.Thread(target=run_framework, args=(framework,
-                                                          qt_loader.stop))
-    thread.start()
+    context.register_service("qtfeet.ui.loader", qtloader, {})
 
-    # Run the Qt loop (blocking)
-    qt_loader.loop()
+    threaded.OnStopThread(first, second, stop)\
+        .run(framework, qtloader)
 
-    # Stop the framework (if still there)
-    framework.stop()
-    thread.join(1)
-
-
-def run_framework(framework, on_stop):
-    """
-    Handles Pelix framework starting and main loop.
-    Waits for the framework to stop before stopping Qt and returning.
-
-    This method should be executed in a new thread.
-
-    :param framework: The Pelix framework to run
-    :param on_stop: Method to call once the framework has stopped
-    """
-    try:
-        # Start the framework
-        context = framework.get_bundle_context()
-        framework.start()
-
-        # [...] Install bundles, instantiate components [...]
-        # Start config services
-        context.install_bundle('qtfeet.config.args').start()
-        context.install_bundle('qtfeet.config.pwd_dot_qtfeet').start()
-        context.install_bundle('qtfeet.config.home_dot_qtfeet').start()
-        context.install_bundle('qtfeet.config.service').start()
-        # Start logging services
-        context.install_bundle('qtfeet.log.loggin').start()
-        context.install_bundle('qtfeet.log.service').start()
-        # Start UI service
-        context.install_bundle('qtfeet.ui.main_frame').start()
-        # Start configured add-ons
-        context.install_bundle('qtfeet.addons.service').start()
-
-        # Wait for the framework to stop
-        framework.wait_for_stop()
-
-    finally:
-        # Stop on errors or if the framework stopped
-        if on_stop is not None:
-            # Notify the given method
-            on_stop()
 
 # Classic...
 if __name__ == "__main__":
