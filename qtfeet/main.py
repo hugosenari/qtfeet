@@ -42,6 +42,7 @@ class HelloWorldAddon(object):
 
         :param context: iPOPO context
         """
+        context.install_bundle('qtfeet.config.args').start()
         context.install_bundle('qtfeet.config.pwd_dot_qtfeet').start()
         context.install_bundle('qtfeet.config.home_dot_qtfeet').start()
         context.install_bundle('qtfeet.config.service').start()
