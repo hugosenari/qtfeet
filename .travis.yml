@@ -5,7 +5,6 @@ language: python
 python:
   - "3.3"
   - "2.7"
-  - "pypy"
 
 before_install:
   - ./bin/ci/before_install.sh
