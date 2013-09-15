@@ -3,13 +3,12 @@
 
 """
 test_qtfeet
-----------------------------------
+-----------
 
 Tests for `qtfeet` module.
 """
 
 import unittest
-
 import qtfeet
 
 
@@ -23,6 +22,3 @@ class TestQtfeet(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-if __name__ == '__main__':
-    unittest.main()

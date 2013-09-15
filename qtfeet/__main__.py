@@ -78,7 +78,9 @@ def stop(framework, qtloader):
 # ------------------------------------------------------------------------
 
 
-def main():
+def qtfeet_main():
+    logging.basicConfig(level=logging.WARNING)
+
     # Loads Qt and the framework.
     framework = pelix.framework.create_framework(
         ['pelix.ipopo.core', 'pelix.shell.core', 'pelix.shell.ipopo'])
@@ -96,5 +98,4 @@ def main():
 
 # Classic...
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.WARNING)
-    main()
+    qtfeet_main()

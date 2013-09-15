@@ -21,7 +21,7 @@ Service examples:
 - toolbar
 - status bar
 - other addon
-- etc  # TODO: Link documentation of all services avaiable
+- [etc](http://qtfeet.readthedocs.org/en/latest/)
 
 
 Tip:
